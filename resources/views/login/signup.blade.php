@@ -16,25 +16,26 @@
 </head>
 
 <body>
-    @if ($message = Session::get('error'))
-    <div class="alert alert-danger alert-block">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        <strong>{{ $message }}</strong>
-    </div>
-    @endif
 
-    @if (count($errors) > 0)
-    <div class="alert alert-danger">
-        <ul>
-            @foreach($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
     <br />
     <div class="container box">
         <h3 align="center">Signup Page in Laravel</h3><br />
+        @if ($message = Session::get('error'))
+        <div class="alert alert-danger alert-block">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+        </div>
+        @endif
+
+        @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
         <form method="post" action="{{url('/signup/adddata') }}">
             {{ csrf_field() }}
             <div class="form-group">
@@ -51,7 +52,7 @@
             </div>
             <div class="form-group">
                 <label>Confirm Password</label>
-                <input type="conpassword" name="conpassword" class="form-control" required />
+                <input type="password" name="conpassword" class="form-control" required />
             </div>
             <div class="form-group">
                 <input type="submit" name="signup" class="btn btn-primary" value="Signup" />
