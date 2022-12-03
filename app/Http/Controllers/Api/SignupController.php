@@ -1,60 +1,65 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Api;
+use  App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
-use Auth;
+use Hash;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+// use Auth;
 
-class LoginController extends Controller
+
+class SignupController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
-        return view('login.login');
-    }
+   
 
-    function checklogin(Request $request)
+    function signup(Request $request)
     {
      $this->validate($request, [
+        'name'=>'required',
       'email'   => 'required|email',
-      'password'  => 'required|alphaNum|min:3'
+      'password'  => 'required|alphaNum|min:3',
+      'conpassword'  => 'required|alphaNum|min:3'
      ]);
-
-     $user_data = array(
-      'email'  => $request->get('email'),
-      'password' => $request->get('password')
-     );
-
-     if(Auth::attempt($user_data))
+     
+     $email=$request->post('email');
+     $results = DB::select('select * from users where email = ?', array($email));
+     if($results)
      {
-      return redirect('/login/successlogin');
+        return json_encode(array(
+        "status" => 0,
+        "message" => "Email already registered"
+      ));
      }
-     else
-     {
-      return back()->with('error', 'Wrong Login Details');
-     }
+     else{
+        if($request->post('password') == $request->post('conpassword')){
+            User::insert([
+                'name'  => $request->post('name'),
+                'email'  => $request->post('email'),
+                'password' =>  Hash::make($request->post('password'))
+            ]);
+            return json_encode(array(
+                "status" => 1,
+                "message" => "Signup successfull"
+              ));
+            
+    
+         }else{
+            return json_encode(array(
+                "status" => 2,
+                "message" => "password and confirm password need to be same"
+              ));
+            // return back()->with('error', 'password and confirm password need to be same');
+         }
+    
 
     }
-
-    function successlogin()
-    {
-     return view('login.successlogin');
-    }
-
-    function logout()
-    {
-     Auth::logout();
-     return redirect('/login');
-    }
-    function signup()
-    {
-        return view('login.signup');
     }
     /**
      * Show the form for creating a new resource.

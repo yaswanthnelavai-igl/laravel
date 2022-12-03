@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SignupController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,3 +22,6 @@ Route::get('/login', [LoginController::class, 'index']);
 Route::post('/login/checklogin', [LoginController::class, 'checklogin']);
 Route::get('/login/successlogin', [LoginController::class, 'successlogin']);
 Route::get('/login/logout', [LoginController::class, 'logout']);
+
+Route::get('/signup', [SignupController::class, 'index']);
+Route::post('/signup/adddata', [SignupController::class, 'adddata']);
